@@ -1,23 +1,31 @@
 //load app server
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+const port = 3003;
 const morgan = require('morgan');
+const db = require('./queries')
 
 app.use(morgan ('short'));
+app.use(bodyParser.json());
+app.use(
+    bodyParser.urlencoded({
+        extended: true
+    })
+)
+
+app.get('/users', db.getUsers)
+
+app.get('/users/:id', db.getUserById)
 
 
 app.get('/', (req, res) => {
-    console.log('Responding to root route');
-    res.send('hello from ROOOOt');
-})
-
-app.get('/users', (req, res) => {
-    let user1 = {fistName: 'atti', lastName: 'pom'}
-    let user2 = {fistName: 'corn', lastName: 'dog'}
-    res.json([user1, user2]);
+    res.json({
+        info: 'Node.js, epxress, POSTGRESS'
+    })
 })
 
 //localhose:3003
-app.listen(3003, () => {
+app.listen(port, () => {
     console.log('Server is up an listening on port 3003...')
 });
